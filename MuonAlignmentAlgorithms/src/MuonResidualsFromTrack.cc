@@ -32,8 +32,8 @@ MuonResidualsFromTrack::MuonResidualsFromTrack(const edm::EventSetup& iSetup,
                                                const reco::Track* recoTrack,
                                                AlignableNavigator *navigator,
                                                double maxResidual,
-                                               struct CSCLayerData * layerData_CSC,
-                                               TTree * layerTree_CSC,
+//                                               struct CSCLayerData * layerData_CSC,
+//                                               TTree * layerTree_CSC,
                                                struct DTLayerData * layerData_DT,
                                                TTree * layerTree_DT)
   : m_recoTrack(recoTrack)
@@ -59,11 +59,11 @@ MuonResidualsFromTrack::MuonResidualsFromTrack(const edm::EventSetup& iSetup,
     layerData_DT->pt = m_recoTrack->pt();
     layerData_DT->charge = m_recoTrack->charge(); 
 
-    layerData_CSC->eta = m_recoTrack->eta();
-    layerData_CSC->phi = m_recoTrack->phi();
-    layerData_CSC->pz = m_recoTrack->pz();
-    layerData_CSC->pt = m_recoTrack->pt();
-    layerData_CSC->charge = m_recoTrack->charge(); 
+    //layerData_CSC->eta = m_recoTrack->eta();
+    //layerData_CSC->phi = m_recoTrack->phi();
+    //layerData_CSC->pz = m_recoTrack->pz();
+    //layerData_CSC->pt = m_recoTrack->pt();
+    //layerData_CSC->charge = m_recoTrack->charge(); 
 
 
     int iT = 0, iM = 0;
@@ -105,9 +105,9 @@ MuonResidualsFromTrack::MuonResidualsFromTrack(const edm::EventSetup& iSetup,
     layerData_DT->nCSC = iCSC;
     layerData_DT->nDT = iDT;
 
-    layerData_CSC->nTracker = iT;
-    layerData_CSC->nCSC = iCSC;
-    layerData_CSC->nDT = iDT;
+    //layerData_CSC->nTracker = iT;
+    //layerData_CSC->nCSC = iCSC;
+    //layerData_CSC->nDT = iDT;
 
     //  TrackTransformer trackTransformer();
     //  std::vector<Trajectory> vTrackerTrajectory = trackTransformer.transform(track, recHitsForReFit);
@@ -324,11 +324,11 @@ MuonResidualsFromTrack::MuonResidualsFromTrack(const edm::EventSetup& iSetup,
         }
     }    
 
-    layerData_CSC->select = false;
+    //layerData_CSC->select = false;
     layerData_DT->select = false;
     if( m_tracker_numHits >= 15 ) { //15 is minTrackerHits
       if( normalizedChi2() < 10 ) { //10 is maxTrackerRedChi2
-         layerData_CSC->select = true;
+         //layerData_CSC->select = true;
          layerData_DT->select = true;
       }
     }
@@ -373,14 +373,14 @@ MuonResidualsFromTrack::MuonResidualsFromTrack(const edm::EventSetup& iSetup,
                         int nLayers_DT = 0;
                     
 
-                            //for (int i = 0; i < 2; i++) { 
-                            //    layerData_DT->v_hitx[i] = -999.;
-                            //    layerData_DT->v_resx[i] = -999.;
-                            //}
-                            //for (int i = 0; i < 1; i++) { 
-                            //    layerData_DT->v_hity[i] = -999.;
-                            //    layerData_DT->v_resy[i] = -999.;
-                            //}
+                            for (int i = 0; i < 8; i++) { 
+                                layerData_DT->v_hitx[i] = -999.;
+                                layerData_DT->v_resx[i] = -999.;
+                            }
+                            for (int i = 0; i < 4; i++) { 
+                                layerData_DT->v_hity[i] = -999.;
+                                layerData_DT->v_resy[i] = -999.;
+                            }
 
                         // for ( std::vector<const TrackingRecHit*>::const_iterator itDTSeg2D =  vDTSeg2D.begin();
                         //                                                          itDTSeg2D != vDTSeg2D.end();
@@ -426,7 +426,6 @@ MuonResidualsFromTrack::MuonResidualsFromTrack(const edm::EventSetup& iSetup,
                                     TrajectoryStateOnSurface extrapolation;
                                     extrapolation = prop->propagate( lastTrackerTsos, globalGeometry->idToDet(hitId)->surface() );
 
-                                std::cout << nLayers_DT << " super layer: "  << layerId.layer() << " hit, resx: " << extrapolation.localPosition().y() << " " <<  extrapolation.localPosition().y()- hit->localPosition().y() << std::endl;
                                     if ( extrapolation.isValid() ) {
                                         if (m_debug) {
                                             std::cout << " extrapolation localPosition()"
@@ -447,10 +446,10 @@ MuonResidualsFromTrack::MuonResidualsFromTrack(const edm::EventSetup& iSetup,
                                         m_dt2[chamberId]->addResidual(prop, &extrapolation, hit,chamber_width,chamber_length);
                                     }
                                     //            	    residualDT2IsAdded = true;
-
-                                    //layerData_DT->v_hity[superLayerId.superlayer()-1] = hit->localPosition().x();
+                                std::cout << "res x: " << extrapolation.localPosition().y() - hit->localPosition().y() << std::endl;
+                                    layerData_DT->v_hity[layerId.layer()-1] = hit->localPosition().y();
                                     if(extrapolation.isValid() ) {
-                                        //layerData_DT->v_resx[superLayerId.superlayer()-1] = extrapolation.localPosition().x() - hit->localPosition().x();
+                                        layerData_DT->v_resy[layerId.layer()-1] = extrapolation.localPosition().y() - hit->localPosition().y();
                                     }
                                 } else if ( (superLayerId.superlayer() == 1 || superLayerId.superlayer() == 3) && vDTHits1D.size() >= 6 ) {
                                     if ( m_dt13.find(chamberId) == m_dt13.end() ) {
@@ -467,6 +466,7 @@ MuonResidualsFromTrack::MuonResidualsFromTrack(const edm::EventSetup& iSetup,
                                     TrajectoryStateOnSurface extrapolation;
                                     extrapolation = prop->propagate( lastTrackerTsos, globalGeometry->idToDet(hitId)->surface() );
 
+                                //std::cout << nLayers_DT << " super layer: "  << layerId.layer() + 2*(superLayerId.superlayer()-1) << " hit, resx: " << extrapolation.localPosition().y() << " " <<  extrapolation.localPosition().y()- hit->localPosition().y() << std::endl;
                                     if ( extrapolation.isValid() ) {
                                         if (m_debug) {
                                             std::cout << " extrapolation localPosition()"
@@ -477,10 +477,10 @@ MuonResidualsFromTrack::MuonResidualsFromTrack(const edm::EventSetup& iSetup,
                                         m_dt13[chamberId]->addResidual(prop, &extrapolation, hit,chamber_width,chamber_length);
                                     }
                                     //            	    residualDT13IsAdded = true;
-                                    //layerData_DT->v_hity[layerId.layer()-1] = hit->localPosition().y();
+                                    layerData_DT->v_hitx[layerId.layer()+ 2*(superLayerId.superlayer()-1) -1] = hit->localPosition().x();
 
                                     if(extrapolation.isValid() ) {
-                                        //layerData_DT->v_resy[layerId.layer()-1] = extrapolation.localPosition().y() - hit->localPosition().y();
+                                        layerData_DT->v_resx[layerId.layer()+ 2*(superLayerId.superlayer()-1) -1] = extrapolation.localPosition().x() - hit->localPosition().x();
                                     }
 
                                     nLayers_DT++;
@@ -519,10 +519,10 @@ MuonResidualsFromTrack::MuonResidualsFromTrack(const edm::EventSetup& iSetup,
                         const CSCDetId chamberId(cscDetId2.endcap(), cscDetId2.station(), cscDetId2.ring(), cscDetId2.chamber());
                         if (m_debug) std::cout << "Muon hit in CSC endcap " << cscDetId2.endcap() << " station " << cscDetId2.station() << " ring " << cscDetId2.ring() << " chamber " << cscDetId2.chamber() << "." << std::endl;
 
-                        layerData_CSC->endcap = cscDetId2.endcap();
-                        layerData_CSC->station = cscDetId2.station();
-                        layerData_CSC->ring = cscDetId2.ring();
-                        layerData_CSC->chamber = cscDetId2.chamber();
+                        //layerData_CSC->endcap = cscDetId2.endcap();
+                        //layerData_CSC->station = cscDetId2.station();
+                        //layerData_CSC->ring = cscDetId2.ring();
+                        //layerData_CSC->chamber = cscDetId2.chamber();
 
 
                         if ( (*hit2)->dimension() == 4 ) {
@@ -538,11 +538,11 @@ MuonResidualsFromTrack::MuonResidualsFromTrack(const edm::EventSetup& iSetup,
                         
 
                                 for (int i = 0; i < 6; i++) { 
-                                    layerData_CSC->v_hitx[i] = -999.;
-                                    layerData_CSC->v_hity[i] = -999.;
+                                    //layerData_CSC->v_hitx[i] = -999.;
+                                    //layerData_CSC->v_hity[i] = -999.;
 
-                                    layerData_CSC->v_resx[i] = -999.;
-                                    layerData_CSC->v_resy[i] = -999.;
+                                    //layerData_CSC->v_resx[i] = -999.;
+                                    //layerData_CSC->v_resy[i] = -999.;
                                 }
 
                                 for ( std::vector<TrackingRecHit*>::const_iterator itCSCHits2D =  vCSCHits2D.begin();
@@ -616,21 +616,21 @@ MuonResidualsFromTrack::MuonResidualsFromTrack(const edm::EventSetup& iSetup,
                                         m_csc[chamberId]->addResidual(prop, &extrapolation, hit,250.0,250.0);
                                     }
 
-                                          layerData_CSC->v_hitx[cscDetId.layer()-1] = hit->localPosition().x();
-                                          layerData_CSC->v_hity[cscDetId.layer()-1] = hit->localPosition().y();
+                                          //layerData_CSC->v_hitx[cscDetId.layer()-1] = hit->localPosition().x();
+                                          //layerData_CSC->v_hity[cscDetId.layer()-1] = hit->localPosition().y();
 
                                           if(extrapolation.isValid() ) {
-                                              layerData_CSC->v_resx[cscDetId.layer()-1] = extrapolation.localPosition().x() - hit->localPosition().x();
-                                              layerData_CSC->v_resy[cscDetId.layer()-1] = extrapolation.localPosition().y() - hit->localPosition().y();
+                                              //layerData_CSC->v_resx[cscDetId.layer()-1] = extrapolation.localPosition().x() - hit->localPosition().x();
+                                              //layerData_CSC->v_resy[cscDetId.layer()-1] = extrapolation.localPosition().y() - hit->localPosition().y();
                                           }
 
                                       nLayers++;
                                 } //end CSC loop?
-                                layerData_CSC->nlayers = nLayers;
+                                //layerData_CSC->nlayers = nLayers;
                             }
                             }
 
-                            layerTree_CSC->Fill();
+//                            layerTree_CSC->Fill();
                             layerTree_DT->Fill();
                         } else if ( hitId2.subdetId() == MuonSubdetId::RPC ) {
                             if (m_debug) std::cout << "Muon Hit in RPC" << std::endl;

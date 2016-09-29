@@ -78,8 +78,8 @@ public:
                           const reco::Track* recoTrack,
                           AlignableNavigator *navigator,
                           double maxResidual, 
-                          struct CSCLayerData * layerData_CSC,
-                          TTree * layerTree_CSC,
+                          //struct CSCLayerData * layerData_CSC,
+                          //TTree * layerTree_CSC,
                           struct DTLayerData * layerData_DT,
                           TTree * layerTree_DT);
 

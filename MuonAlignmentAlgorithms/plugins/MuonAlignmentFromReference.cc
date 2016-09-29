@@ -192,7 +192,7 @@ class MuonAlignmentFromReference : public AlignmentAlgorithmBase
         TTree * m_ttree_DT_layers;
         MuonResidualsFitter::MuonAlignmentTreeRow m_tree_row;
 
-        CSCLayerData layerData_CSC;
+        //CSCLayerData layerData_CSC;
         DTLayerData layerData_DT;
 
         bool m_debug;
@@ -245,12 +245,13 @@ class MuonAlignmentFromReference : public AlignmentAlgorithmBase
     m_ttree = NULL;
     if (m_createNtuple) bookNtuple();
 
+
     m_ttree_CSC_layers = NULL;
     m_ttree_DT_layers = NULL;
     if (m_createLayerNtuple) {
-        layerData_CSC.doFill = true;
+        //layerData_CSC.doFill = true;
         layerData_DT.doFill = true;
-        bookNtupleLayers_CSC();
+        //bookNtupleLayers_CSC();
         bookNtupleLayers_DT();
     }
 
@@ -341,11 +342,12 @@ void MuonAlignmentFromReference::bookNtupleLayers_DT()
     m_ttree_DT_layers->Branch("phi", &(layerData_DT.phi), "phi/F");
 
 
-    m_ttree_DT_layers->Branch("hit_x", &(layerData_DT.v_hitx_SL), "hit_x[2]/F");
-    m_ttree_DT_layers->Branch("hit_y", &(layerData_DT.v_hity_SL), "hit_y[1]/F");
+    m_ttree_DT_layers->Branch("hit_x", &(layerData_DT.v_hitx), "hit_x[8]/F");
+    m_ttree_DT_layers->Branch("hit_y", &(layerData_DT.v_hity), "hit_y[4]/F");
 
-    m_ttree_DT_layers->Branch("res_x", &(layerData_DT.v_resx_SL), "res_x[2]/F");
-    m_ttree_DT_layers->Branch("res_y", &(layerData_DT.v_resy_SL), "res_y[1]/F");
+    m_ttree_DT_layers->Branch("res_x", &(layerData_DT.v_resx), "res_x[8]/F");
+    m_ttree_DT_layers->Branch("res_y", &(layerData_DT.v_resy), "res_y[4]/F");
+
 
   
 }
@@ -354,35 +356,35 @@ void MuonAlignmentFromReference::bookNtupleLayers_CSC()
 {
     edm::Service<TFileService> fs;
 
-    m_ttree_CSC_layers = fs->make<TTree>("csc_layer_ttree", "csc_layer_ttree");
-    m_ttree_CSC_layers->Branch("charge", &(layerData_CSC.charge), "charge/i");
-    m_ttree_CSC_layers->Branch("nEvent", &(layerData_CSC.nEvent), "nEvent/i");
-    m_ttree_CSC_layers->Branch("nlayers", &(layerData_CSC.nlayers), "nlayers/i");
-
-    m_ttree_CSC_layers->Branch("nDT", &(layerData_CSC.nDT), "nDT/i");
-    m_ttree_CSC_layers->Branch("nCSC", &(layerData_CSC.nCSC), "nCSC/i");
-    m_ttree_CSC_layers->Branch("nTracker", &(layerData_CSC.nTracker), "nTracker/i");
-    
-    m_ttree_CSC_layers->Branch("select", &(layerData_CSC.select), "select/O");
-
-
-    m_ttree_CSC_layers->Branch("endcap", &(layerData_CSC.endcap), "endcap/b");
-    m_ttree_CSC_layers->Branch("station", &(layerData_CSC.station), "station/b");
-    m_ttree_CSC_layers->Branch("ring", &(layerData_CSC.ring), "ring/b");
-    m_ttree_CSC_layers->Branch("chamber", &(layerData_CSC.chamber), "chamber/b");
-
-    m_ttree_CSC_layers->Branch("pt", &(layerData_CSC.pt), "pt/F");
-    m_ttree_CSC_layers->Branch("pz", &(layerData_CSC.pz), "pz/F");
-    m_ttree_CSC_layers->Branch("eta", &(layerData_CSC.eta), "eta/F");
-    m_ttree_CSC_layers->Branch("phi", &(layerData_CSC.phi), "phi/F");
-
-
-    m_ttree_CSC_layers->Branch("hit_x", &(layerData_CSC.v_hitx), "hit_x[6]/F");
-    m_ttree_CSC_layers->Branch("hit_y", &(layerData_CSC.v_hity), "hit_y[6]/F");
-
-    m_ttree_CSC_layers->Branch("res_x", &(layerData_CSC.v_resx), "res_x[6]/F");
-    m_ttree_CSC_layers->Branch("res_y", &(layerData_CSC.v_resy), "res_y[6]/F");
-
+//    m_ttree_CSC_layers = fs->make<TTree>("csc_layer_ttree", "csc_layer_ttree");
+//    m_ttree_CSC_layers->Branch("charge", &(layerData_CSC.charge), "charge/i");
+//    m_ttree_CSC_layers->Branch("nEvent", &(layerData_CSC.nEvent), "nEvent/i");
+//    m_ttree_CSC_layers->Branch("nlayers", &(layerData_CSC.nlayers), "nlayers/i");
+//
+//    m_ttree_CSC_layers->Branch("nDT", &(layerData_CSC.nDT), "nDT/i");
+//    m_ttree_CSC_layers->Branch("nCSC", &(layerData_CSC.nCSC), "nCSC/i");
+//    m_ttree_CSC_layers->Branch("nTracker", &(layerData_CSC.nTracker), "nTracker/i");
+//    
+//    m_ttree_CSC_layers->Branch("select", &(layerData_CSC.select), "select/O");
+//
+//
+//    m_ttree_CSC_layers->Branch("endcap", &(layerData_CSC.endcap), "endcap/b");
+//    m_ttree_CSC_layers->Branch("station", &(layerData_CSC.station), "station/b");
+//    m_ttree_CSC_layers->Branch("ring", &(layerData_CSC.ring), "ring/b");
+//    m_ttree_CSC_layers->Branch("chamber", &(layerData_CSC.chamber), "chamber/b");
+//
+//    m_ttree_CSC_layers->Branch("pt", &(layerData_CSC.pt), "pt/F");
+//    m_ttree_CSC_layers->Branch("pz", &(layerData_CSC.pz), "pz/F");
+//    m_ttree_CSC_layers->Branch("eta", &(layerData_CSC.eta), "eta/F");
+//    m_ttree_CSC_layers->Branch("phi", &(layerData_CSC.phi), "phi/F");
+//
+//
+//    m_ttree_CSC_layers->Branch("hit_x", &(layerData_CSC.v_hitx), "hit_x[6]/F");
+//    m_ttree_CSC_layers->Branch("hit_y", &(layerData_CSC.v_hity), "hit_y[6]/F");
+//
+//    m_ttree_CSC_layers->Branch("res_x", &(layerData_CSC.v_resx), "res_x[6]/F");
+//    m_ttree_CSC_layers->Branch("res_y", &(layerData_CSC.v_resy), "res_y[6]/F");
+//
     
 }
 
@@ -541,7 +543,7 @@ void MuonAlignmentFromReference::run(const edm::EventSetup& iSetup, const EventI
     iSetup.get<DetIdAssociatorRecord>().get("MuonDetIdAssociator", muonDetIdAssociator_);
 
     //layerData_CSC.cutType = m_cutTypes;
-      layerData_CSC.cutType = "Not implemented";
+      //layerData_CSC.cutType = "Not implemented";
     if (m_muonCollectionTag.label().empty()) // use trajectories
     {
         if (m_debug) std::cout << "JUST BEFORE LOOP OVER trajTrackPairs" << std::endl;
@@ -564,8 +566,9 @@ void MuonAlignmentFromReference::run(const edm::EventSetup& iSetup, const EventI
                     m_counter_trackdxy++;
                     if (m_debug) std::cout << "JUST BEFORE muonResidualsFromTrack" << std::endl;
                     //MuonResidualsFromTrack muonResidualsFromTrack(iSetup, magneticField, globalGeometry, muonDetIdAssociator_, prop, traj, track, m_alignableNavigator, 1000.,  &layerData_CSC, m_ttree_CSC_layers);
-                    MuonResidualsFromTrack muonResidualsFromTrack(iSetup, magneticField, globalGeometry, muonDetIdAssociator_, prop, traj, track, m_alignableNavigator, 1000.,  &layerData_CSC, m_ttree_CSC_layers, &layerData_DT, m_ttree_DT_layers);
-                    layerData_CSC.nEvent = m_counter_events;
+                    //MuonResidualsFromTrack muonResidualsFromTrack(iSetup, magneticField, globalGeometry, muonDetIdAssociator_, prop, traj, track, m_alignableNavigator, 1000.,  &layerData_CSC, m_ttree_CSC_layers, &layerData_DT, m_ttree_DT_layers);
+                    MuonResidualsFromTrack muonResidualsFromTrack(iSetup, magneticField, globalGeometry, muonDetIdAssociator_, prop, traj, track, m_alignableNavigator, 1000., &layerData_DT, m_ttree_DT_layers);
+                    //layerData_CSC.nEvent = m_counter_events;
                     if (m_debug) std::cout << "JUST AFTER muonResidualsFromTrack" << std::endl;
 
                     if (m_debug) std::cout << "JUST BEFORE PROCESS" << std::endl;

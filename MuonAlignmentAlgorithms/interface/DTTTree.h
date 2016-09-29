@@ -23,9 +23,10 @@ typedef struct DTLayerData {
     Float_t eta;
     Float_t phi;
      
-    Float_t v_hitx_SL[2], v_hity_SL[1];
-    Float_t v_resx_SL[2], v_resy_SL[1];
+    Float_t v_hitx[8], v_hity[4];
+    Float_t v_resx[8], v_resy[4];
     
+    //std::vector <Float_t> made_up_array(8);
 
     // not in ttree, but for other purposes
     Bool_t doFill;
@@ -48,14 +49,14 @@ typedef struct DTLayerData {
         phi = BADVAL;
         doFill = false;
         cutType = "";
-        for(int i = 0; i < 12; i++) {
-    //        v_layer_hitx[i] = BADVAL;
-     //       v_layer_resx[i] = BADVAL;
-        }
-        for(int i = 0; i < 12; i++) {
-     //       v_layer_hity[i] = BADVAL;
-     //       v_layer_resy[i] = BADVAL;
-        }
+       // for(int i = 0; i < 2; i++) {
+       //     v_layer_hitx[i] = BADVAL;
+       //     v_layer_resx[i] = BADVAL;
+       // }
+       // for(int i = 0; i < 1; i++) {
+       //     v_layer_hity[i] = BADVAL;
+       //     v_layer_resy[i] = BADVAL;
+       // }
     } 
 
     DTLayerData & operator = (DTLayerData x)
@@ -75,18 +76,18 @@ typedef struct DTLayerData {
         phi = x.phi;
         doFill = x.doFill;
         cutType = x.cutType;
-
-       for(int i = 0; i < 12; i++) {
-     //       v_layer_hitx[i] = x.v_layer_hitx[i];
-     //       v_layer_resx[i] = x.v_layer_resx[i];
-        }
-        for(int i = 0; i < 12; i++) {
-     //       v_layer_hity[i] = x.v_layer_hity[i];
-     //       v_layer_resy[i] = x.v_layer_resy[i];
-        }
+        
+       //for(int i = 0; i < 2; i++) {
+       //     v_layer_hitx[i] = x.v_layer_hitx[i];
+       //     v_layer_resx[i] = x.v_layer_resx[i];
+       // }
+       // for(int i = 0; i < 1; i++) {
+       //     v_layer_hity[i] = x.v_layer_hity[i];
+       //     v_layer_resy[i] = x.v_layer_resy[i];
+       // }
         return *this;
     }
 } DTLayerData;
-// RDM
+// RDM based on nja work
 
 #endif
