@@ -24,7 +24,7 @@ typedef struct DTLayerData {
     Float_t phi;
      
     Float_t v_hitx[8], v_hity[4];
-    Float_t v_resx[8], v_resy[4];
+    Float_t v_trackx[8], v_tracky[4], v_tracky_x_layer[8];
     
     //std::vector <Float_t> made_up_array(8);
 

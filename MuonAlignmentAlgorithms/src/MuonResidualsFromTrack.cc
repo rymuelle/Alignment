@@ -52,7 +52,7 @@ MuonResidualsFromTrack::MuonResidualsFromTrack(const edm::EventSetup& iSetup,
     iSetup.get<TransientRecHitRecord>().get("WithTrackAngle",theTrackerRecHitBuilder);
     reco::TransientTrack track( *m_recoTrack, &*magneticField, globalGeometry );
     TransientTrackingRecHit::ConstRecHitContainer recHitsForRefit;
-   
+    
     layerData_DT->eta = m_recoTrack->eta();
     layerData_DT->phi = m_recoTrack->phi();
     layerData_DT->pz = m_recoTrack->pz();
@@ -375,11 +375,11 @@ MuonResidualsFromTrack::MuonResidualsFromTrack(const edm::EventSetup& iSetup,
 
                             for (int i = 0; i < 8; i++) { 
                                 layerData_DT->v_hitx[i] = -999.;
-                                layerData_DT->v_resx[i] = -999.;
+                                layerData_DT->v_trackx[i] = -999.;
                             }
                             for (int i = 0; i < 4; i++) { 
                                 layerData_DT->v_hity[i] = -999.;
-                                layerData_DT->v_resy[i] = -999.;
+                                layerData_DT->v_tracky[i] = -999.;
                             }
 
                         // for ( std::vector<const TrackingRecHit*>::const_iterator itDTSeg2D =  vDTSeg2D.begin();
@@ -446,11 +446,15 @@ MuonResidualsFromTrack::MuonResidualsFromTrack(const edm::EventSetup& iSetup,
                                         m_dt2[chamberId]->addResidual(prop, &extrapolation, hit,chamber_width,chamber_length);
                                     }
                                     //            	    residualDT2IsAdded = true;
-                                std::cout << "res x: " << extrapolation.localPosition().y() - hit->localPosition().y() << std::endl;
-                                    layerData_DT->v_hity[layerId.layer()-1] = hit->localPosition().y();
+                                    
+                                //std::cout << "hit y: " << extrapolation.localPosition().y() << " " << hit->localPosition().y() << std::endl;
+                                //std::cout << "hit x2: " << extrapolation.localPosition().x() << " " << hit->localPosition().x() << std::endl;
+                                    //filling with .x instead of .y() cause I noticed .y and .x being different then expected
+                                    layerData_DT->v_hity[layerId.layer()-1] = hit->localPosition().x();
                                     if(extrapolation.isValid() ) {
-                                        layerData_DT->v_resy[layerId.layer()-1] = extrapolation.localPosition().y() - hit->localPosition().y();
+                                        layerData_DT->v_tracky[layerId.layer()-1] = extrapolation.localPosition().x();
                                     }
+
                                 } else if ( (superLayerId.superlayer() == 1 || superLayerId.superlayer() == 3) && vDTHits1D.size() >= 6 ) {
                                     if ( m_dt13.find(chamberId) == m_dt13.end() ) {
                                         AlignableDetOrUnitPtr chamberAlignable = navigator->alignableFromDetId(chamberId);
@@ -477,10 +481,13 @@ MuonResidualsFromTrack::MuonResidualsFromTrack(const edm::EventSetup& iSetup,
                                         m_dt13[chamberId]->addResidual(prop, &extrapolation, hit,chamber_width,chamber_length);
                                     }
                                     //            	    residualDT13IsAdded = true;
+                                //std::cout << "hit x: " << extrapolation.localPosition().x() << " " << hit->localPosition().x() << std::endl;
+                                //std::cout << "hit y2: " << extrapolation.localPosition().y() << " " << hit->localPosition().y() << std::endl;
                                     layerData_DT->v_hitx[layerId.layer()+ 2*(superLayerId.superlayer()-1) -1] = hit->localPosition().x();
 
                                     if(extrapolation.isValid() ) {
-                                        layerData_DT->v_resx[layerId.layer()+ 2*(superLayerId.superlayer()-1) -1] = extrapolation.localPosition().x() - hit->localPosition().x();
+                                        layerData_DT->v_trackx[layerId.layer()+ 2*(superLayerId.superlayer()-1) -1] = extrapolation.localPosition().x();
+                                        layerData_DT->v_tracky_x_layer[layerId.layer()+ 2*(superLayerId.superlayer()-1) -1] = extrapolation.localPosition().y();
                                     }
 
                                     nLayers_DT++;
@@ -490,6 +497,8 @@ MuonResidualsFromTrack::MuonResidualsFromTrack(const edm::EventSetup& iSetup,
                             }
                         }
                                 layerData_DT->nlayers = nLayers_DT; //need to change
+
+                            layerTree_DT->Fill();
                         }
 
                         //          std::cout << "Extrapolate last Tracker TSOS to muon hit" << std::endl;
@@ -631,7 +640,6 @@ MuonResidualsFromTrack::MuonResidualsFromTrack(const edm::EventSetup& iSetup,
                             }
 
 //                            layerTree_CSC->Fill();
-                            layerTree_DT->Fill();
                         } else if ( hitId2.subdetId() == MuonSubdetId::RPC ) {
                             if (m_debug) std::cout << "Muon Hit in RPC" << std::endl;
                         } else {

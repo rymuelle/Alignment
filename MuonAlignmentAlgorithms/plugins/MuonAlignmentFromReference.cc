@@ -345,8 +345,9 @@ void MuonAlignmentFromReference::bookNtupleLayers_DT()
     m_ttree_DT_layers->Branch("hit_x", &(layerData_DT.v_hitx), "hit_x[8]/F");
     m_ttree_DT_layers->Branch("hit_y", &(layerData_DT.v_hity), "hit_y[4]/F");
 
-    m_ttree_DT_layers->Branch("res_x", &(layerData_DT.v_resx), "res_x[8]/F");
-    m_ttree_DT_layers->Branch("res_y", &(layerData_DT.v_resy), "res_y[4]/F");
+    m_ttree_DT_layers->Branch("track_x", &(layerData_DT.v_trackx), "track_x[8]/F");
+    m_ttree_DT_layers->Branch("track_y", &(layerData_DT.v_tracky), "track_y[4]/F");
+    m_ttree_DT_layers->Branch("track_y_x_layer", &(layerData_DT.v_tracky_x_layer), "track_y_x_layer[4]/F");
 
 
   
@@ -889,6 +890,7 @@ void MuonAlignmentFromReference::terminate(const edm::EventSetup& iSetup)
     {
         stop_watch.Start();
         fillNtuple();
+        //std::cout << "Sector" <<  layerData_DT.sector << std::endl; 
         if (m_debug) std::cout <<"fillNtuple took "<< stop_watch.CpuTime() << " sec" << std::endl;
         stop_watch.Stop();
     }
