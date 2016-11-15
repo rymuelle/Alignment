@@ -7,7 +7,7 @@ Setup Muon Alignment in 80X with simulated data:
     CMSSW_8_0_8_patch1/src/
     cmsenv
     
-    git clone https://github.com/rymuelle/Alignment/tree/80X_layer_plots_DT_CSC -b 80X_layer_plots_DT_CSC
+    git clone https://github.com/rymuelle/Alignment.git -b 80X_layer_plots_DT_CSC
     git clone https://github.com/cms-mual/TrackingTools.git -b CMSSW_8_0_X
     git clone https://github.com/cms-mual/MuAlSupplementaryFiles.git -b CMSSW_8_0_X
     
